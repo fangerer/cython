@@ -22,6 +22,8 @@ class APIBackend:
 
 class CApiBackend(APIBackend):
     name = "cpython"
+    needs_to_load_globals = 0
+
     pyobject_ctype = "PyObject *"
     pyobject_ctype_base_part = "PyObject"
     pyobject_ctype_entity_part = "*"
@@ -254,6 +256,8 @@ class CApiBackend(APIBackend):
 
 class HPyBackend(APIBackend):
     name = "hpy"
+    needs_to_load_globals = 1
+
     pyobject_ctype = "HPy"
     pyobject_ctype_base_part = "HPy"
     pyobject_ctype_entity_part = ""
@@ -467,6 +471,8 @@ class HPyBackend(APIBackend):
 
 class CombinedBackend(APIBackend):
     name = "combined"
+    needs_to_load_globals = 1
+
     pyobject_ctype = "__PYX_OBJECT_CTYPE"
     pyobject_ctype_base_part = "__PYX_OBJECT_CTYPE"
     pyobject_ctype_entity_part = ""
@@ -816,4 +822,4 @@ class CombinedBackend(APIBackend):
         code.putln("#endif /* %s */" % hpy_guard)
 
 
-backend = CApiBackend
+backend = CombinedBackend

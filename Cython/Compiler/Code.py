@@ -1217,6 +1217,7 @@ class GlobalState(object):
             w = self.parts['cached_builtins']
             w.enter_cfunc_scope()
             w.putln("static CYTHON_SMALL_CODE int __Pyx_InitCachedBuiltins(%s) {" % arg_list)
+            self.parts['cached_builtins_decls'] = w.insertion_point()
 
         w = self.parts['cached_constants']
         w.enter_cfunc_scope()
@@ -1304,6 +1305,8 @@ class GlobalState(object):
         self.generate_const_declarations()
         if Options.cache_builtins:
             w = self.parts['cached_builtins']
+            w_decls = self.parts['cached_builtins_decls']
+            w_decls.put_temp_declarations(w.funcstate)
             w.putln("return 0;")
             if w.label_used(w.error_label):
                 w.put_label(w.error_label)
@@ -1515,11 +1518,16 @@ class GlobalState(object):
         interned_cname = self.get_interned_identifier(name).cname
         self.use_utility_code(
             UtilityCode.load_cached("GetBuiltinName", "ObjectHandling.c"))
+        from .PyrexTypes import py_object_type
+        tmp_var = w.funcstate.allocate_temp(py_object_type, True)
         w.putln('%s = %s; if (!%s) %s' % (
-            cname,
+            tmp_var,
             backend.get_call('__Pyx_GetBuiltinNameFromGlobal', interned_cname),
-            cname,
+            backend.get_is_null_cond(tmp_var),
             w.error_goto(pos)))
+        w.store_global(cname, tmp_var, py_object_type)
+        w.putln(backend.get_close_loaded_global(tmp_var));
+        w.funcstate.release_temp(tmp_var)
 
     def generate_const_declarations(self):
         self.generate_cached_methods_decls()

@@ -2159,7 +2159,8 @@ class NameNode(AtomicExprNode):
 
         if entry.is_pyglobal or entry.is_builtin:
             if entry.is_builtin and entry.is_const:
-                self.is_temp = 0
+                # in HPy, this will be an HPyField that needs to be loaded into a temp
+                self.is_temp = backend.needs_to_load_globals
             else:
                 self.is_temp = 1
 
@@ -2305,6 +2306,8 @@ class NameNode(AtomicExprNode):
         if entry.utility_code:
             code.globalstate.use_utility_code(entry.utility_code)
         if entry.is_builtin and entry.is_const:
+            if backend.needs_to_load_globals:
+                code.load_global(self.entry.cname, py_object_type, target=self.result())
             return  # Lookup already cached
         elif entry.is_pyclass_attr:
             assert entry.type.is_pyobject, "Python global or builtin not a Python object"

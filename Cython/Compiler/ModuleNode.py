@@ -3413,7 +3413,7 @@ class ModuleNode(Nodes.Node, Nodes.BlockNode):
             code.putln("/*--- Builtin cleanup code ---*/")
             for entry in env.cached_builtins:
                 code.put_xdecref_clear(
-                    entry.cname, PyrexTypes.py_object_type,
+                    entry.cname, PyrexTypes.py_object_global_type,
                     clear_before_decref=True,
                     nanny=False)
         code.putln("/*--- Intern cleanup code ---*/")
