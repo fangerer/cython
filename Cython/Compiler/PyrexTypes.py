@@ -169,7 +169,6 @@ class PyrexType(BaseType):
     #  Base class for all Cython types
     #
     #  is_pyobject           boolean     Is a Python object type
-    #  is_hpy                boolean     Is an HPy handle type
     #  is_extension_type     boolean     Is a Python extension type
     #  is_final_type         boolean     Is a final extension type
     #  is_numeric            boolean     Is a C numeric type
@@ -236,7 +235,6 @@ class PyrexType(BaseType):
     #
 
     is_pyobject = 0
-    is_hpy = 0
     is_unspecified = 0
     is_extension_type = 0
     is_final_type = 0
