@@ -364,7 +364,7 @@ class CompilerDirectivesNode(Node):
         code.globalstate.directives = old
 
 
-class CPPNode(Node):
+class PreprocessorIfNode(Node):
     """
     Encloses the child nodes with a C preprocessor condition. E.g.
     #if <cond>
