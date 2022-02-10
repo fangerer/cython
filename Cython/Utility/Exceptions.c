@@ -40,11 +40,11 @@ static CYTHON_INLINE int __Pyx_ErrOccurredWithGIL(void) {
 /////////////// PyErrExceptionMatches.proto ///////////////
 //@substitute: naming
 
-#if CYTHON_FAST_THREAD_STATE
+#if CYTHON_COMPILING_IN_HPY
+#define __Pyx_PyErr_ExceptionMatches(ctx, err)  HPyErr_ExceptionMatches(ctx, err)
+#elif CYTHON_FAST_THREAD_STATE
 #define __Pyx_PyErr_ExceptionMatches(err) __Pyx_PyErr_ExceptionMatchesInState($local_tstate_cname, err)
 static CYTHON_INLINE int __Pyx_PyErr_ExceptionMatchesInState(PyThreadState* tstate, PyObject* err);
-#elif CYTHON_COMPILING_IN_HPY
-#define __Pyx_PyErr_ExceptionMatches(ctx, err)  HPyErr_ExceptionMatches(ctx, err)
 #else
 #define __Pyx_PyErr_ExceptionMatches(err)  PyErr_ExceptionMatches(err)
 #endif
