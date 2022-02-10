@@ -483,12 +483,12 @@ class __Pyx_FakeReference {
 /////////////// HPyInitCode.proto ///////////////
 
 #if CYTHON_COMPILING_IN_HPY
-static CYTHON_INLINE HPy _HPy_GetModuleDict(HPyContext *ctx);
-static CYTHON_INLINE int _HPy_Contains(HPyContext *ctx, HPy x, HPy y);
-static CYTHON_INLINE HPy _HPyImport_AddModule(HPyContext *ctx, const char *name);
-static CYTHON_INLINE HPy _HPyDict_GetItem_s(HPyContext *ctx, HPy dict, const char *name);
-static CYTHON_INLINE void _HPyErr_WriteUnraisable(HPyContext *ctx, HPy h);
-static CYTHON_INLINE int _HPy_IsSubclass(HPyContext *ctx, HPy derived, HPy cls);
+static CYTHON_UNUSED HPy _HPy_GetModuleDict(HPyContext *ctx);
+static CYTHON_UNUSED int _HPy_Contains(HPyContext *ctx, HPy x, HPy y);
+static CYTHON_UNUSED HPy _HPyImport_AddModule(HPyContext *ctx, const char *name);
+static CYTHON_UNUSED HPy _HPyDict_GetItem_s(HPyContext *ctx, HPy dict, const char *name);
+static CYTHON_UNUSED void _HPyErr_WriteUnraisable(HPyContext *ctx, HPy h);
+static CYTHON_UNUSED int _HPy_IsSubclass(HPyContext *ctx, HPy derived, HPy cls);
 #endif /* CYTHON_COMPILING_IN_HPY */
 
 /////////////// HPyInitCode ///////////////
