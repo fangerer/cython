@@ -32,7 +32,7 @@ from . import StringEncoding
 from . import Version
 from .. import Utils
 from .Scanning import SourceDescriptor
-from .Backend import backend
+from .Backend import backend, CApiBackend
 from ..StringIOTree import StringIOTree
 from .Errors import error
 
@@ -2362,7 +2362,7 @@ class CCodeWriter(object):
         method_flags = entry.signature.method_flags()
         if not method_flags:
             return
-        meth_def = backend.get_method_definition_entry(entry, wrapper_code_writer)
+        meth_def = CApiBackend.get_method_definition_entry(entry, wrapper_code_writer)
         if meth_def:
             self.putln(meth_def + term)
 
