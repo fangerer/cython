@@ -536,7 +536,7 @@ static HPy __Pyx_PyNumber_IntOrLongWrongResultType(HPyContext *ctx, HPy result, 
     Py_DECREF(result);
     return NULL;
 */
-    if (!HPy_TypeCheck(ctx, result, ctx->h_LongType)) {
+    if (!HPyLong_Check(ctx, result)) {
         HPyErr_SetString(ctx, ctx->h_TypeError, "invalid type");
         return HPy_NULL;
     }
@@ -1094,11 +1094,11 @@ static CYTHON_INLINE {{TYPE}} {{FROM_PY_FUNCTION}}(HPyContext *$hpy_context_cnam
         }
     } else
 #endif
-#if !CYTHON_COMPILING_IN_HPY
+#if CYTHON_COMPILING_IN_HPY
+    if (likely(HPyLong_Check($hpy_context_cname, x))) {
+#else
     if (likely(PyLong_Check(x))) {
-#else /* CYTHON_COMPILING_IN_HPY */
-    if (likely(HPy_TypeCheck($hpy_context_cname, x, $hpy_context_cname->h_LongType))) {
-#endif /* CYTHON_COMPILING_IN_HPY */
+#endif
         if (is_unsigned) {
 #if CYTHON_USE_PYLONG_INTERNALS
             const digit* digits = ((PyLongObject*)x)->ob_digit;
@@ -1124,12 +1124,12 @@ static CYTHON_INLINE {{TYPE}} {{FROM_PY_FUNCTION}}(HPyContext *$hpy_context_cnam
             }
 #else /* CYTHON_COMPILING_IN_CPYTHON && !CYTHON_COMPILING_IN_HPY */
             {
-#if !CYTHON_COMPILING_IN_HPY
+#if CYTHON_COMPILING_IN_HPY
+                int result = HPy_RichCompareBool($hpy_context_cname, x, $hpy_context_cname->h_False, HPy_LT);
+#else
                 // misuse Py_False as a quick way to compare to a '0' int object in PyPy
                 int result = PyObject_RichCompareBool(x, Py_False, Py_LT);
-#else /* CYTHON_COMPILING_IN_HPY */
-                int result = HPy_RichCompareBool($hpy_context_cname, x, $hpy_context_cname->h_False, HPy_LT);
-#endif /* CYTHON_COMPILING_IN_HPY */
+#endif
                 if (unlikely(result < 0))
                     return ({{TYPE}}) -1;
                 if (unlikely(result == 1))
@@ -1175,7 +1175,7 @@ static CYTHON_INLINE {{TYPE}} {{FROM_PY_FUNCTION}}(HPyContext *$hpy_context_cnam
             }
         }
         {
-#if (CYTHON_COMPILING_IN_PYPY || CYTHON_COMPILING_IN_LIMITED_API || HPY) && !defined(_PyLong_AsByteArray)
+#if (CYTHON_COMPILING_IN_PYPY || CYTHON_COMPILING_IN_LIMITED_API || CYTHON_COMPILING_IN_HPY) && !defined(_PyLong_AsByteArray)
             __Pyx_PyErr_SetString(__Pyx_PyExc_RuntimeError,
                             "_PyLong_AsByteArray() not available, cannot convert large numbers");
 #else
