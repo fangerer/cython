@@ -4493,18 +4493,29 @@ class GeneratorDefNode(DefNode):
 
     def generate_function_body(self, env, code):
         body_cname = self.gbody.entry.func_cname
-        name = code.intern_identifier(self.name)
-        qualname = code.intern_identifier(self.qualname)
-        module_name = code.intern_identifier(self.module_name)
+        name = code.load_global(code.intern_identifier(self.name), py_object_type)
+        qualname = code.load_global(code.intern_identifier(self.qualname), py_object_type)
+        module_name = code.load_global(code.intern_identifier(self.module_name), py_object_type)
+
+        if self.code_object:
+            self.code_object.generate_evaluation_code(code)
 
         code.putln('{')
         code.putln('__pyx_CoroutineObject *gen = __Pyx_%s_New('
-                   '(__pyx_coroutine_body_t) %s, %s, (PyObject *) %s, %s, %s, %s); %s' % (
+                   '(__pyx_coroutine_body_t) %s, %s, (%s) %s, %s, %s, %s); %s' % (
                        self.gen_type_name,
-                       body_cname, self.code_object.calculate_result_code(code) if self.code_object else 'NULL',
+                       body_cname, self.code_object.result() if self.code_object else backend.pyobject_init_value,
+                       backend.pyobject_ctype,
                        Naming.cur_scope_cname, name, qualname, module_name,
                        code.error_goto_if_null('gen', self.pos)))
         code.put_decref(Naming.cur_scope_cname, py_object_type)
+        for x in (name, qualname, module_name):
+            code.putln(backend.get_close_loaded_global(x))
+            code.funcstate.release_temp(x)
+        if self.code_object:
+            self.code_object.generate_disposal_code(code)
+            self.code_object.free_temps(code)
+
         if self.requires_classobj:
             classobj_cname = 'gen->classobj'
             code.putln('%s = __Pyx_CyFunction_GetClassObj(%s);' % (
@@ -4512,7 +4523,7 @@ class GeneratorDefNode(DefNode):
             code.put_incref(classobj_cname, py_object_type)
             code.put_giveref(classobj_cname, py_object_type)
         code.put_finish_refcount_context()
-        code.putln('return (PyObject *) gen;')
+        code.putln('return (%s) gen;' % backend.pyobject_ctype)
         code.putln('}')
 
     def generate_function_definitions(self, env, code):
