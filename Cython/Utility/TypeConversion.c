@@ -1067,11 +1067,7 @@ static CYTHON_INLINE {{TYPE}} {{FROM_PY_FUNCTION}}(HPyContext *, HPy);
 
 {{py: from Cython.Utility import pylong_join }}
 
-#if !CYTHON_COMPILING_IN_HPY
-static CYTHON_INLINE {{TYPE}} {{FROM_PY_FUNCTION}}(PyObject *x) {
-#else /* CYTHON_COMPILING_IN_HPY */
-static CYTHON_INLINE {{TYPE}} {{FROM_PY_FUNCTION}}(HPyContext *$hpy_context_cname, HPy x) {
-#endif /* CYTHON_COMPILING_IN_HPY */
+static CYTHON_INLINE {{TYPE}} {{FROM_PY_FUNCTION}}(__PYX_CONTEXT_DECL __PYX_OBJECT_CTYPE x) {
 #ifdef __Pyx_HAS_GCC_DIAGNOSTIC
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wconversion"
@@ -1094,11 +1090,7 @@ static CYTHON_INLINE {{TYPE}} {{FROM_PY_FUNCTION}}(HPyContext *$hpy_context_cnam
         }
     } else
 #endif
-#if CYTHON_COMPILING_IN_HPY
-    if (likely(HPyLong_Check($hpy_context_cname, x))) {
-#else
-    if (likely(PyLong_Check(x))) {
-#endif
+    if (likely(__PYX_API_CALL(__Pyx_PyLong_Check, x))) {
         if (is_unsigned) {
 #if CYTHON_USE_PYLONG_INTERNALS
             const digit* digits = ((PyLongObject*)x)->ob_digit;

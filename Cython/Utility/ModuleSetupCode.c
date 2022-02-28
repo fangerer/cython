@@ -677,6 +677,8 @@ static CYTHON_INLINE int _HPy_IsSubclass(HPyContext *ctx, HPy derived, HPy cls)
 #define __Pyx_PyExc_RuntimeError PyExc_RuntimeError
 #define __Pyx_PyErr_WriteUnraisable PyErr_WriteUnraisable
 
+#define __Pyx_PyLong_Check PyLong_Check
+
 #define __Pyx_PyModule_GetDict PyModule_GetDict
 #define __Pyx_PyImport_AddModule PyImport_AddModule
 #define __Pyx_PyImport_GetModuleDict PyImport_GetModuleDict
@@ -725,6 +727,7 @@ static CYTHON_INLINE int _HPy_IsSubclass(HPyContext *ctx, HPy derived, HPy cls)
 
 #define HPyLong_Check(ctx, x) HPy_TypeCheck(ctx, x, ctx->h_LongType)
 #define HPyLong_CheckExact(ctx, x) HPy_Is(ctx, HPy_Type(ctx, x), ctx->h_LongType)
+#define __Pyx_PyLong_Check(ctx, x) HPy_TypeCheck(ctx, x, ctx->h_LongType)
 #define HPyBytes_CheckExact HPyBytes_Check
 #define HPyUnicode_Check(ctx, x) HPy_TypeCheck(ctx, x, ctx->h_UnicodeType)
 #define HPyUnicode_CheckExact(ctx, x) HPy_Is(ctx, HPy_Type(ctx, x), ctx->h_UnicodeType)
