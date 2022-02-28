@@ -118,9 +118,9 @@ static CYTHON_INLINE Py_hash_t __Pyx_PyIndex_AsHash_t(PyObject*);
 
 #if CYTHON_ASSUME_SAFE_MACROS
 #define __pyx_PyFloat_AsDouble(x) (PyFloat_CheckExact(x) ? PyFloat_AS_DOUBLE(x) : PyFloat_AsDouble(x))
-#else /* CYTHON_ASSUME_SAFE_MACROS */
+#else
 #define __pyx_PyFloat_AsDouble(x) PyFloat_AsDouble(x)
-#endif /* CYTHON_ASSUME_SAFE_MACROS */
+#endif
 #define __pyx_PyFloat_AsFloat(x) ((float) __pyx_PyFloat_AsDouble(x))
 
 #if PY_MAJOR_VERSION >= 3
