@@ -1520,7 +1520,7 @@ class GlobalState(object):
             UtilityCode.load_cached("GetBuiltinName", "ObjectHandling.c"))
         from .PyrexTypes import py_object_type
         tmp_var = w.funcstate.allocate_temp(py_object_type, True)
-        w.putln('%s = %s; if (!%s) %s' % (
+        w.putln('%s = %s; if (%s) %s' % (
             tmp_var,
             backend.get_call('__Pyx_GetBuiltinNameFromGlobal', interned_cname),
             backend.get_is_null_cond(tmp_var),
