@@ -3591,6 +3591,7 @@ class DefNodeWrapper(FuncDefNode):
             code.put_label(code.error_label)
             for cname, type in code.funcstate.all_managed_temps():
                 code.put_xdecref(cname, type)
+                code.funcstate.release_temp(cname)
             err_val = self.error_value()
             if err_val is not None:
                 code.putln("%s = %s;" % (Naming.retval_cname, err_val))

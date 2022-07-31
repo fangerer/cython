@@ -3058,33 +3058,39 @@ class ModuleNode(Nodes.Node, Nodes.BlockNode):
         code.putln("#endif")
 
         code.putln("/* initialise %s */" % Naming.empty_tuple)
+        code.putln("{")
         tmp_empty_tuple_cname = Naming.temp_prefix + "empty_tuple"
-        code.putln("%s tuple_builder = %s;" % (
+        code.putln("  %s tuple_builder = %s;" % (
             backend.tuple_builder_ctype, backend.get_call(backend.tuple_builder_new, "0")))
-        code.putln("%s %s = %s; %s" % (
+        code.putln("  %s %s = %s; %s" % (
             backend.pyobject_ctype, tmp_empty_tuple_cname,
             backend.get_call(backend.tuple_builder_build, "tuple_builder"),
             code.error_goto_if_null(tmp_empty_tuple_cname, self.pos)))
-        code.putln("%s;" % backend.get_write_global(env.module_cname, Naming.empty_tuple, tmp_empty_tuple_cname))
-        code.putln("%s;" % backend.get_closeref(tmp_empty_tuple_cname, False, False))
+        code.putln("  %s;" % backend.get_write_global(env.module_cname, Naming.empty_tuple, tmp_empty_tuple_cname))
+        code.putln("  %s;" % backend.get_closeref(tmp_empty_tuple_cname, False, False))
+        code.putln("}")
 
         tmp_empty_bytes_cname = Naming.temp_prefix + "empty_bytes"
         code.putln("/* initialise %s */" % Naming.empty_bytes)
-        code.putln("%s %s = %s; %s" % (
+        code.putln("{")
+        code.putln("  %s %s = %s; %s" % (
             backend.pyobject_ctype, tmp_empty_bytes_cname,
             backend.get_call(backend.bytes_from_string_and_size, "\"\"", "0"),
             code.error_goto_if_null(tmp_empty_bytes_cname, self.pos)))
-        code.putln("%s;" % backend.get_write_global(env.module_cname, Naming.empty_bytes, tmp_empty_bytes_cname))
-        code.putln("%s;" % backend.get_closeref(tmp_empty_bytes_cname, False, False))
+        code.putln("  %s;" % backend.get_write_global(env.module_cname, Naming.empty_bytes, tmp_empty_bytes_cname))
+        code.putln("  %s;" % backend.get_closeref(tmp_empty_bytes_cname, False, False))
+        code.putln("}")
 
         tmp_empty_unicode_cname = Naming.temp_prefix + "empty_unicode"
         code.putln("/* initialise %s */" % Naming.empty_unicode)
-        code.putln("%s %s = %s; %s" % (
+        code.putln("{")
+        code.putln("  %s %s = %s; %s" % (
             backend.pyobject_ctype, tmp_empty_unicode_cname,
             backend.get_call(backend.unicode_from_string, "\"\""),
             code.error_goto_if_null(tmp_empty_unicode_cname, self.pos)))
-        code.putln("%s;" % backend.get_write_global(env.module_cname, Naming.empty_unicode, tmp_empty_unicode_cname))
-        code.putln("%s;" % backend.get_closeref(tmp_empty_unicode_cname, False, False))
+        code.putln("  %s;" % backend.get_write_global(env.module_cname, Naming.empty_unicode, tmp_empty_unicode_cname))
+        code.putln("  %s;" % backend.get_closeref(tmp_empty_unicode_cname, False, False))
+        code.putln("}")
 
         # TODO(fa): currently not supported with the HPy backend
         code.putln("#if !(%s)" % backend.hpy_guard)

@@ -581,7 +581,13 @@ class CombinedBackend(APIBackend):
         code.putln("#define __PYX_NONE %s" % CApiBackend.pynone)
         code.putln("#define __PYX_NONE_NEW %s" % CApiBackend.get_none())
         for k in CombinedBackend.hpy_functions:
-            code.putln("#define %s %s" % (CombinedBackend.hpy_functions[k], CApiBackend.py_functions[k]))
+            code.putln("#define %s %s" % (
+                CombinedBackend.hpy_functions[k], CApiBackend.py_functions[k],
+            ))
+            code.putln("#define %s %s" % (
+                CombinedBackend.get_binary_operation_function(k, True),
+                CApiBackend.get_binary_operation_function(k, True),
+            ))
         CApiBackend.put_init_code(code)
 
         code.putln("#else /* %s */" % hpy_guard)
@@ -628,7 +634,14 @@ class CombinedBackend(APIBackend):
         code.putln("#define __PYX_NONE %s" % HPyBackend.pynone)
         code.putln("#define __PYX_NONE_NEW %s" % HPyBackend.get_none())
         for k in CombinedBackend.hpy_functions:
-            code.putln("#define %s %s" % (CombinedBackend.hpy_functions[k], HPyBackend.hpy_functions[k]))
+            code.putln("#define %s %s" % (
+                CombinedBackend.hpy_functions[k],
+                HPyBackend.hpy_functions[k],
+            ))
+            code.putln("#define %s %s" % (
+                CombinedBackend.get_binary_operation_function(k, True),
+                HPyBackend.get_binary_operation_function(k, True),
+            ))
         code.putln("#endif /* %s */" % hpy_guard)
 
     @staticmethod

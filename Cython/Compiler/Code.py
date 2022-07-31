@@ -1520,7 +1520,7 @@ class GlobalState(object):
             UtilityCode.load_cached("GetBuiltinName", "ObjectHandling.c"))
         from .PyrexTypes import py_object_type
         tmp_var = w.funcstate.allocate_temp(py_object_type, True)
-        w.putln('%s = %s; if (!%s) %s' % (
+        w.putln('%s = %s; if (%s) %s' % (
             tmp_var,
             backend.get_call('__Pyx_GetBuiltinNameFromGlobal', interned_cname),
             backend.get_is_null_cond(tmp_var),
@@ -2314,7 +2314,7 @@ class CCodeWriter(object):
     def put_init_to_py_none(self, cname, type, nanny=True):
         from .PyrexTypes import py_object_type, typecast
         py_none = typecast(type, py_object_type, backend.pynone)
-        self.putln("%s = %s; %s;" % (cname, py_none, backend.get_newref(py_none, nanny=nanny)))
+        self.putln("%s = %s;" % (cname, backend.get_newref(py_none, nanny=nanny)))
 
     def put_init_var_to_py_none(self, entry, template = "%s", nanny=True):
         code = template % entry.cname
